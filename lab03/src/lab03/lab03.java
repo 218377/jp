@@ -19,11 +19,6 @@ public class lab03 {
 		System.out.println(curr_t.getTime());
 		curr_t.set(Calendar.MINUTE, (curr_t.get(Calendar.MINUTE)+30));
 		System.out.println(curr_t.getTime());
-		EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				new Window();
-			}
-		});
+		
 	}
 }
