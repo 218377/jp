@@ -10,6 +10,9 @@ public class Address {
 		
 	}
 	
+	public String order_address(){
+		return street + " " + nHome + " " + city;
+	} 
 	private String street;
 	private String nHome;
 	private String city;

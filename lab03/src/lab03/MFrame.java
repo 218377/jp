@@ -19,9 +19,24 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
+import javax.swing.ListSelectionModel;
+import javax.swing.JComboBox;
+import java.awt.GridLayout;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
+import javax.swing.BoxLayout;
+import java.awt.Component;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import net.miginfocom.swing.MigLayout;
 
 public class MFrame extends JFrame {
 	static Calendar curr_t;
+	static ArrayList<Order> orders = new ArrayList<Order>();
 	private JPanel contentPane;
 	private JTable table;
 	private JTextField txtType;
@@ -31,6 +46,8 @@ public class MFrame extends JFrame {
 	private JTextField txtHome;
 	private JTextField txtCity;
 	private JTextField txtCompany;
+	private JTable table_1;
+	private JButton rfs;
 
 	/**
 	 * Launch the application.
@@ -41,7 +58,7 @@ public class MFrame extends JFrame {
 		curr_t.set(Calendar.HOUR_OF_DAY, 10);
 		curr_t.set(Calendar.MINUTE, 00);
 		curr_t.set(Calendar.SECOND, 00);
-		Order orders[];
+		
 		
 		
 		EventQueue.invokeLater(new Runnable() {
@@ -59,6 +76,7 @@ public class MFrame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	@SuppressWarnings("serial")
 	public MFrame() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 600, 480);
@@ -97,9 +115,10 @@ public class MFrame extends JFrame {
 		table = new JTable();
 		
 		@SuppressWarnings("serial")
+		
 		DefaultTableModel model = new DefaultTableModel(
 			new Object[][] {
-				{null, null, null, null},
+				{"Pizza'a", "Address", "Target time", "ID"},
 			},
 			new String[] {
 				"Pizzas", "Adress", "Time", "ID"
@@ -113,10 +132,46 @@ public class MFrame extends JFrame {
 			}
 		};
 		table.setModel(model);
+		table.getColumnModel().getColumn(0).setPreferredWidth(130);
+		table.getColumnModel().getColumn(0).setMinWidth(30);
+		table.getColumnModel().getColumn(1).setPreferredWidth(160);
+		table.getColumnModel().getColumn(2).setPreferredWidth(160);
+		table.getColumnModel().getColumn(3).setPreferredWidth(34);
 		panel_1.add(table);
 		
+		//delivery section
 		JPanel panel_3 = new JPanel();
 		tabbedPane.addTab("Realizacja", null, panel_3, null);
+		DefaultTableModel d_model = new DefaultTableModel(
+			new Object[][] {
+				{"ID", "Deliverer", "Status"},
+			},
+			new String[] {
+				"New column", "New column", "New column"
+			}
+		);
+		DefaultTableModel clear_dmodel = new DefaultTableModel();
+		clear_dmodel = d_model;
+		
+		table_1 = new JTable();
+		table_1.setModel(d_model);
+		
+		rfs = new JButton("Refresh");
+		rfs.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				//d_model = clear_dmodel;
+				for(int i = 0; i<= orders.size() - 1; i++ ){
+					
+					d_model.addRow(new Object[]{orders.get(i).getOrderID(), orders.get(i).getDeliverer(), orders.get(i).getStatus()});
+				}
+			}
+		});
+		rfs.setVerticalAlignment(SwingConstants.BOTTOM);
+		rfs.setHorizontalAlignment(SwingConstants.RIGHT);
+		panel_3.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		panel_3.add(table_1);
+		panel_3.add(rfs);
 		
 		JPanel panel_4 = new JPanel();
 		tabbedPane.addTab("Add", null, panel_4, null);
@@ -162,14 +217,19 @@ public class MFrame extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				Pizza t_pizza = new Pizza(Integer.parseInt(txtType.getText()),Integer.parseInt(txtQuantity.getText()));
 				Address t_adr = new Address(txtStreet.getText(), txtHome.getText(), txtCity.getText(),txtCompany.getText());
-				Calendar o_t = Calendar.getInstance();
+				Calendar o_t;
+				//o_t = Calendar.getInstance();
 				o_t = curr_t;
 				o_t.set(Calendar.MINUTE, (o_t.get(Calendar.MINUTE)+Integer.parseInt(rt.getText())));
-				orders[0] = new Order();
-				model.addRow(new Object[]{});
+				Order c_order = new Order(t_pizza,t_adr,o_t);
+				orders.add(c_order);
+				//Order c_order = orders.get(orders.size() - 1);
+				model.addRow(new Object[]{
+						c_order.getPizzas().get_infos(),c_order.getAddress().order_address(),c_order.getOrder_time().getTime(), c_order.getOrderID()
+				});
+				
 			}
 		});
 		panel_4.add(btnAdd);
 	}
-
 }
