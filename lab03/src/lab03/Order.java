@@ -1,35 +1,23 @@
 package lab03;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class Order {
-
-	public int getOrderID() {
-		return orderID;
-	}
-	public void setOrderID(int orderID) {
-		this.orderID = orderID;
-	}
-	public double getValue() {
-		return value;
-	}
-	public ArrayList<Pizza> getPizzas() {
-		return pizzas;
-	}
-	public void setPizzas(ArrayList<Pizza> pizzas) {
-		this.pizzas = pizzas;
-	}
-	public Address getAddress() {
-		return address;
-	}
-	public void setAddress(Address address) {
+	static int counter = 0;
+	Order(Pizza pizzas, Address address, Calendar o_time){
 		this.address = address;
+		this.orderID = counter;
+		counter++;
+		this.address = address;
+		this.order_time = o_time;
+		
 	}
-
 	private int orderID;
-	private ArrayList<Pizza> pizzas;
+	private Pizza pizzas;
 	private Address address;
+	private static Calendar order_time;
 	
 	private double value;
 	
