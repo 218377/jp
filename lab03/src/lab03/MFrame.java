@@ -33,6 +33,13 @@ import java.awt.GridBagConstraints;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import net.miginfocom.swing.MigLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 
 public class MFrame extends JFrame {
 	static Calendar curr_t;
@@ -47,7 +54,14 @@ public class MFrame extends JFrame {
 	private JTextField txtCity;
 	private JTextField txtCompany;
 	private JTable table_1;
-	private JButton rfs;
+	private JPanel panel;
+	private JTextField txtId;
+	private JTextField txtDeliverer;
+	private JTextField txtStatus;
+	private JButton btnNewButton;
+	private JPanel panel_5;
+	private JTextField txtId_1;
+	private JButton btnGenerateTask;
 
 	/**
 	 * Launch the application.
@@ -154,25 +168,11 @@ public class MFrame extends JFrame {
 		clear_dmodel = d_model;
 		
 		table_1 = new JTable();
+	
 		table_1.setModel(d_model);
-		
-		rfs = new JButton("Refresh");
-		rfs.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				//d_model = clear_dmodel;
-				for(int i = 0; i<= orders.size() - 1; i++ ){
-					
-					d_model.addRow(new Object[]{orders.get(i).getOrderID(), orders.get(i).getDeliverer(), orders.get(i).getStatus()});
-				}
-			}
-		});
-		rfs.setVerticalAlignment(SwingConstants.BOTTOM);
-		rfs.setHorizontalAlignment(SwingConstants.RIGHT);
 		panel_3.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		panel_3.add(table_1);
-		panel_3.add(rfs);
-		
+		//adding orders
 		JPanel panel_4 = new JPanel();
 		tabbedPane.addTab("Add", null, panel_4, null);
 		
@@ -218,7 +218,7 @@ public class MFrame extends JFrame {
 				Pizza t_pizza = new Pizza(Integer.parseInt(txtType.getText()),Integer.parseInt(txtQuantity.getText()));
 				Address t_adr = new Address(txtStreet.getText(), txtHome.getText(), txtCity.getText(),txtCompany.getText());
 				Calendar o_t;
-				//o_t = Calendar.getInstance();
+				o_t = Calendar.getInstance();
 				o_t = curr_t;
 				o_t.set(Calendar.MINUTE, (o_t.get(Calendar.MINUTE)+Integer.parseInt(rt.getText())));
 				Order c_order = new Order(t_pizza,t_adr,o_t);
@@ -227,9 +227,75 @@ public class MFrame extends JFrame {
 				model.addRow(new Object[]{
 						c_order.getPizzas().get_infos(),c_order.getAddress().order_address(),c_order.getOrder_time().getTime(), c_order.getOrderID()
 				});
+				d_model.addRow(new Object[]{c_order.getOrderID(), c_order.getDeliverer(), c_order.getStatus()});
 				
 			}
 		});
 		panel_4.add(btnAdd);
+		
+		panel = new JPanel();
+		tabbedPane.addTab("Update", null, panel, null);
+		
+		txtId = new JTextField();
+		txtId.setText("ID");
+		panel.add(txtId);
+		txtId.setColumns(10);
+		
+		txtDeliverer = new JTextField();
+		txtDeliverer.setText("Deliverer");
+		panel.add(txtDeliverer);
+		txtDeliverer.setColumns(10);
+		
+		txtStatus = new JTextField();
+		txtStatus.setText("Status");
+		panel.add(txtStatus);
+		txtStatus.setColumns(10);
+		
+		btnNewButton = new JButton("Update");
+		btnNewButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				orders.get(Integer.parseInt(txtId.getText())).setDelivererStatus(txtDeliverer.getText(), txtStatus.getText());
+				table_1.getModel().setValueAt(txtDeliverer.getText(), Integer.parseInt(txtId.getText())+1, 1);
+				table_1.getModel().setValueAt(txtStatus.getText(), Integer.parseInt(txtId.getText())+1, 2);
+			}
+		});
+		
+		panel.add(btnNewButton);
+		
+		panel_5 = new JPanel();
+		tabbedPane.addTab("Tasks", null, panel_5, null);
+		
+		txtId_1 = new JTextField();
+		txtId_1.setText("ID");
+		panel_5.add(txtId_1);
+		txtId_1.setColumns(10);
+		
+		btnGenerateTask = new JButton("Generate Task");
+		btnGenerateTask.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				File task = new File("delivery_task_"+txtId_1.getText()+curr_t+".txt","UTF-8");
+				task.mkdirs();
+				try {
+					task.createNewFile();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				PrintWriter file;
+				try {
+					file = new PrintWriter(task);
+					file.println("testline");
+					file.close();
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				//orders.get(Integer.parseInt(txtId.getText()))
+			}
+		});
+		panel_5.add(btnGenerateTask);
 	}
 }

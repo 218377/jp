@@ -26,14 +26,13 @@ public class Order {
 	public String getStatus() {
 		return status;
 	}
-	public void setStatus(String status) {
-		this.status = status;
-	}
+	
 	public String getDeliverer() {
 		return deliverer;
 	}
-	public void setDeliverer(String deliverer) {
+	public void setDelivererStatus(String deliverer,String status) {
 		this.deliverer = deliverer;
+		this.status = status;
 	}
 	//getters
 	public int getOrderID() {
