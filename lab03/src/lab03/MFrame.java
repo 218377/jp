@@ -116,6 +116,12 @@ public class MFrame extends JFrame {
 			public void mouseClicked(MouseEvent arg0) {
 				curr_t.set(Calendar.MINUTE, (curr_t.get(Calendar.MINUTE)+30));
 				time_label.setText(curr_t.getTime().toString());
+				for(int i = 0;i< orders.size();i++){
+					System.out.println((curr_t.compareTo(orders.get(i).getOrder_time())));
+					if(1 == curr_t.compareTo(orders.get(i).getOrder_time()) && (orders.get(i).getStatus() != "Complete" || orders.get(i).getStatus() != "Failed")){
+						table.getModel().setValueAt("Out of time!", i+1, 2);
+					}
+				}
 			}
 		});
 		panel_2.add(time_btn);
@@ -275,8 +281,20 @@ public class MFrame extends JFrame {
 		btnGenerateTask.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				File task = new File("delivery_task_"+txtId_1.getText()+curr_t+".txt","UTF-8");
-				task.mkdirs();
+				int corder= Integer.parseInt(txtId_1.getText());
+				String name = "delivery_task_"+txtId_1.getText() +".txt";
+				File task = new File(name);
+				String text = orders.get(corder).generate_file();
+				try {
+					PrintWriter save = new PrintWriter(name);
+					save.println(text);
+					save.close();
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				/*task.mkdirs();
 				try {
 					task.createNewFile();
 				} catch (IOException e1) {
@@ -292,7 +310,7 @@ public class MFrame extends JFrame {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+				*/
 				//orders.get(Integer.parseInt(txtId.getText()))
 			}
 		});

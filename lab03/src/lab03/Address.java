@@ -13,6 +13,9 @@ public class Address {
 	public String order_address(){
 		return street + " " + nHome + " " + city;
 	} 
+	public String delv_address(){
+		return street + " " + nHome + ", \r\n"  + city + ", \r\n" +company;
+	} 
 	private String street;
 	private String nHome;
 	private String city;

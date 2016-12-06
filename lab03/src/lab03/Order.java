@@ -22,6 +22,9 @@ public class Order {
 	private String status;
 	private String deliverer;
 	
+	public String generate_file(){
+		return address.delv_address() + " \r\n" + pizzas.getPrice() +" zl\r\nWykonawca :"+deliverer+ "\r\n";
+	}
 	
 	public String getStatus() {
 		return status;

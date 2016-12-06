@@ -7,6 +7,9 @@ public class Pizza {
 	//private static String[] types;
 	private int type;
 	private double price;
+	public double getPrice() {
+		return price;
+	}
 	private int quantity;
 	
 	public String get_infos(){
